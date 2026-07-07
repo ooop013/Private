@@ -89,7 +89,11 @@ export default function Sales({ user }) {
     const { error } = await q;
     setBusy(false);
     if (error) return alert("저장 실패: " + error.message);
-    setModal(null);
+    if (modal.mode === "new") {
+      setForm({ amount: "", net_amount: "", memo: "" });
+    } else {
+      setModal(null);
+    }
     load();
   }
 

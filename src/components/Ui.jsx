@@ -1,9 +1,9 @@
 import { shiftDay, shiftMonth } from "../lib/utils";
 
-export function Modal({ title, onClose, children, wide }) {
+export function Modal({ title, children, wide }) {
   return (
-    <div className="overlay" onClick={onClose}>
-      <div className="modal" style={wide ? { width: 560 } : undefined} onClick={(e) => e.stopPropagation()}>
+    <div className="overlay">
+      <div className="modal" style={wide ? { width: 560 } : undefined}>
         <h2>{title}</h2>
         {children}
       </div>
