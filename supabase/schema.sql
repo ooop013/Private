@@ -59,3 +59,37 @@ create policy "expenses_update_own" on expenses
 
 create policy "expenses_delete_own" on expenses
   for delete using (auth.uid() = user_id);
+
+-- ============================
+-- 가계부 > 계좌관리
+-- ============================
+
+create table accounts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  type text not null check (type in ('bank', 'card', 'savings', 'stock')),
+  nickname text not null,
+  institution text,       -- 은행명 / 카드사 / 은행사
+  account_number text,     -- 계좌번호 / 카드번호
+  cvc text,                -- 카드 전용
+  expiry_date date,        -- 카드/적금 만기일
+  interest_rate numeric,   -- 적금 적용금리(%)
+  deposit_amount numeric,  -- 적금 납입금액
+  amount numeric,          -- 주식 평가금액
+  memo text,               -- 용도
+  created_at timestamptz default now()
+);
+
+alter table accounts enable row level security;
+
+create policy "accounts_select_own" on accounts
+  for select using (auth.uid() = user_id);
+
+create policy "accounts_insert_own" on accounts
+  for insert with check (auth.uid() = user_id);
+
+create policy "accounts_update_own" on accounts
+  for update using (auth.uid() = user_id);
+
+create policy "accounts_delete_own" on accounts
+  for delete using (auth.uid() = user_id);

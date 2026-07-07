@@ -56,6 +56,16 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .header-right { margin-left: auto; display: flex; align-items: center; gap: 12px; color: var(--ink-soft); }
 
 .page { max-width: 1120px; margin: 0 auto; padding: 28px; }
+
+/* ── 하위 탭 ──────────────────────────── */
+.subtabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.subtab {
+  border: 1px solid var(--line); background: var(--surface); cursor: pointer;
+  padding: 8px 16px; border-radius: 9px; font-weight: 700; color: var(--ink-soft);
+}
+.subtab:hover { background: var(--bg); }
+.subtab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
 .page-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .page-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
 .spacer { flex: 1; }
