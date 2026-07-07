@@ -254,3 +254,42 @@ button, input, select, textarea { font: inherit; color: inherit; }
   border: 1px solid var(--line); cursor: pointer; display: block;
 }
 .subhead { font-size: 13px; font-weight: 700; color: var(--ink-soft); margin: 16px 0 8px; }
+
+/* ── 견적 시스템 : 파츠 그리드 ─────────── */
+.part-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+.part-card, .part-admin-card {
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 10px;
+  text-align: center; background: var(--surface);
+}
+.part-card.selected { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-soft); }
+.part-card img, .part-admin-card img {
+  width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; margin-bottom: 8px;
+}
+.part-noimg {
+  width: 100%; aspect-ratio: 1; border-radius: 8px; margin-bottom: 8px;
+  background: var(--bg); color: var(--ink-soft); font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.part-card .name, .part-admin-card .name { font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+.qty-stepper { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.qty-stepper button {
+  width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--line);
+  background: var(--surface); cursor: pointer; font-weight: 700;
+}
+.qty-stepper button:disabled { opacity: 0.4; cursor: default; }
+.qty-stepper span { min-width: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.part-amt { margin-top: 6px; font-weight: 700; color: var(--primary); font-size: 13px; }
+.part-warn { margin-top: 6px; font-size: 11.5px; color: var(--danger); }
+
+/* ── 견적 시스템 : 견적 요약 ──────────── */
+.summary-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 13.5px;
+}
+.summary-row span:first-child { color: var(--ink-soft); white-space: nowrap; }
+.summary-row span:last-child { text-align: right; }
+.summary-total {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 14px; padding-top: 14px; border-top: 2px solid var(--ink);
+  font-size: 19px; font-weight: 800;
+}

@@ -5,12 +5,14 @@ import Dashboard from "./pages/Dashboard";
 import Sales from "./pages/Sales";
 import Materials from "./pages/Materials";
 import Ledger from "./pages/Ledger";
+import Quote from "./pages/Quote";
 
 const TABS = [
   { key: "home", label: "홈" },
   { key: "sales", label: "매출관리" },
   { key: "materials", label: "재료비관리" },
   { key: "ledger", label: "가계부" },
+  { key: "quote", label: "견적" },
 ];
 
 export default function App() {
@@ -61,6 +63,7 @@ export default function App() {
       {tab === "sales" && <Sales user={user} />}
       {tab === "materials" && <Materials user={user} />}
       {tab === "ledger" && <Ledger user={user} />}
+      {tab === "quote" && <Quote user={user} />}
     </>
   );
 }
