@@ -13,6 +13,8 @@ export default function Materials({ user }) {
   const [catModal, setCatModal] = useState(false);
   const [newCat, setNewCat] = useState("");
   const [busy, setBusy] = useState(false);
+  const [range, setRange] = useState({ from: monthRange(thisMonth()).start, to: today() });
+  const [dlBusy, setDlBusy] = useState(false);
 
   const loadCats = useCallback(async () => {
     const { data } = await supabase
@@ -39,6 +41,36 @@ export default function Materials({ user }) {
 
   const total = useMemo(() => rows.reduce((a, r) => a + Number(r.amount), 0), [rows]);
   const setForm = (patch) => setModal((m) => ({ ...m, form: { ...m.form, ...patch } }));
+
+  // ── CSV 다운로드 ──────────────────────
+  async function downloadCsv() {
+    if (!range.from || !range.to) return alert("기간을 선택하세요.");
+    if (range.from > range.to) return alert("시작일이 종료일보다 늦을 수 없습니다.");
+    setDlBusy(true);
+    const { data, error } = await supabase
+      .from("expenses")
+      .select("*")
+      .eq("kind", "material")
+      .gte("expense_date", range.from)
+      .lte("expense_date", range.to)
+      .order("expense_date", { ascending: true });
+    setDlBusy(false);
+    if (error) return alert("다운로드 실패: " + error.message);
+    if (!data || data.length === 0) return alert("해당 기간에 재료비 내역이 없습니다.");
+
+    const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const lines = [
+      ["날짜", "품목", "메모", "금액"].map(esc).join(","),
+      ...data.map((r) => [r.expense_date, r.category, r.memo, r.amount].map(esc).join(",")),
+    ];
+    const blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `재료비_${range.from}_${range.to}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   // ── 카테고리 관리 ──────────────────────
   async function addCat() {
@@ -129,6 +161,24 @@ export default function Materials({ user }) {
         <h1 className="page-title">재료비관리</h1>
         <MonthNav ym={ym} onChange={setYm} />
         <div className="spacer" />
+        <div className="range-picker">
+          <input
+            className="input sm"
+            type="date"
+            value={range.from}
+            onChange={(e) => setRange((r) => ({ ...r, from: e.target.value }))}
+          />
+          <span>~</span>
+          <input
+            className="input sm"
+            type="date"
+            value={range.to}
+            onChange={(e) => setRange((r) => ({ ...r, to: e.target.value }))}
+          />
+          <button className="btn" onClick={downloadCsv} disabled={dlBusy}>
+            {dlBusy ? "다운로드 중…" : "CSV 다운로드"}
+          </button>
+        </div>
         <button className="btn" onClick={() => setCatModal(true)}>카테고리 관리</button>
         <button
           className="btn primary"
