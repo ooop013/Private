@@ -98,6 +98,21 @@ button, input, select, textarea { font: inherit; color: inherit; }
   border-radius: var(--radius); padding: 20px; margin-bottom: 20px;
 }
 .panel h3 { margin: 0 0 14px; font-size: 15px; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.panel-head h3 { margin: 0; }
+
+/* ── 예산 현황 ────────────────────────── */
+.budget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.budget-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.budget-card .label { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.budget-amt-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.budget-amt-row .sub { font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+.budget-amt-row .input { width: 120px; }
+.budget-bar { height: 6px; background: var(--line); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+.budget-bar .fill { height: 100%; background: var(--primary); }
+.budget-card .sub { font-size: 12.5px; color: var(--ink-soft); }
+.budget-card .sub b.pos { color: var(--cash-color); }
+.budget-card .sub b.neg { color: var(--danger); }
 
 /* ── 캘린더 ───────────────────────────── */
 .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
@@ -229,8 +244,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .seg button.on.income { background: var(--cash-color); color: #fff; }
 .seg button.on.expense { background: var(--danger); color: #fff; }
+.seg button.on.transfer { background: var(--primary); color: #fff; }
 .badge.income { background: var(--cash-soft); color: var(--cash-color); }
 .badge.expense { background: #fdecec; color: var(--danger); }
+.badge.transfer { background: var(--primary-soft); color: var(--primary); }
 
 .receipt-thumb {
   width: 44px; height: 44px; object-fit: cover; border-radius: 8px;

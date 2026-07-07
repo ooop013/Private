@@ -42,7 +42,7 @@ export default function Dashboard() {
 
     const material = sum(expenses.filter((x) => x.kind === "material"), (r) => r.amount);
     const ledgerRows = expenses.filter((x) => x.kind === "ledger");
-    const ledgerExpense = sum(ledgerRows.filter((x) => x.entry_type !== "income"), (r) => r.amount);
+    const ledgerExpense = sum(ledgerRows.filter((x) => x.entry_type === "expense"), (r) => r.amount);
     const ledgerIncome = sum(ledgerRows.filter((x) => x.entry_type === "income"), (r) => r.amount);
 
     return {
@@ -76,7 +76,7 @@ export default function Dashboard() {
   const calendarDays = useMemo(() => {
     const expenseByDay = {};
     for (const r of expenses) {
-      if (r.kind === "material" || (r.kind === "ledger" && r.entry_type !== "income")) {
+      if (r.kind === "material" || (r.kind === "ledger" && r.entry_type === "expense")) {
         const d = Number(r.expense_date.slice(8, 10));
         expenseByDay[d] = (expenseByDay[d] ?? 0) + Number(r.amount);
       }

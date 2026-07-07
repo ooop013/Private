@@ -93,3 +93,34 @@ create policy "accounts_update_own" on accounts
 
 create policy "accounts_delete_own" on accounts
   for delete using (auth.uid() = user_id);
+
+-- ============================
+-- 가계부 > 예산관리
+-- ============================
+
+create table budgets (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  name text not null,
+  monthly_amount numeric not null default 0,
+  created_at timestamptz default now()
+);
+
+alter table budgets enable row level security;
+
+create policy "budgets_select_own" on budgets
+  for select using (auth.uid() = user_id);
+
+create policy "budgets_insert_own" on budgets
+  for insert with check (auth.uid() = user_id);
+
+create policy "budgets_update_own" on budgets
+  for update using (auth.uid() = user_id);
+
+create policy "budgets_delete_own" on budgets
+  for delete using (auth.uid() = user_id);
+
+-- 지출내역(expenses)에서 계좌(결제수단/이체)와 예산구분을 참조하기 위한 컬럼
+alter table expenses add column if not exists account_id uuid references accounts(id) on delete set null;
+alter table expenses add column if not exists to_account_id uuid references accounts(id) on delete set null;
+alter table expenses add column if not exists budget_id uuid references budgets(id) on delete set null;

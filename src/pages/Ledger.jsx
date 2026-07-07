@@ -3,12 +3,12 @@ import Accounts from "./ledger/Accounts";
 import Transactions from "./ledger/Transactions";
 
 const SUB_TABS = [
+  { key: "transactions", label: "지출내역" },
   { key: "accounts", label: "계좌관리" },
-  { key: "transactions", label: "거래내역" },
 ];
 
 export default function Ledger({ user }) {
-  const [sub, setSub] = useState("accounts");
+  const [sub, setSub] = useState("transactions");
 
   return (
     <div className="page">
