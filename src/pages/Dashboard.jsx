@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import { supabase } from "../lib/supabase";
 import { MonthNav } from "../components/Ui";
@@ -68,8 +68,29 @@ export default function Dashboard() {
       const d = Number(r.sale_date.slice(8, 10)) - 1;
       if (arr[d]) arr[d][r.payment_method === "card" ? "카드" : "현금"] += Number(r.amount);
     }
+    for (const row of arr) row.총합 = row.카드 + row.현금;
     return arr;
   }, [sales, ym]);
+
+  // 지출 = 재료비 + 가계부 거래내역의 지출 항목 (수입 제외)
+  const calendarDays = useMemo(() => {
+    const expenseByDay = {};
+    for (const r of expenses) {
+      if (r.kind === "material" || (r.kind === "ledger" && r.entry_type !== "income")) {
+        const d = Number(r.expense_date.slice(8, 10));
+        expenseByDay[d] = (expenseByDay[d] ?? 0) + Number(r.amount);
+      }
+    }
+    return daily.map((row, i) => {
+      const day = i + 1;
+      const expense = expenseByDay[day] ?? 0;
+      return { day, sales: row.총합, expense, total: row.총합 - expense };
+    });
+  }, [daily, expenses]);
+
+  const [calY, calM] = ym.split("-").map(Number);
+  const calLeadBlanks = new Date(calY, calM - 1, 1).getDay();
+  const DOW = ["일", "월", "화", "수", "목", "금", "토"];
 
   const cardPct = stat.gross > 0 ? Math.round((stat.cardGross / stat.gross) * 100) : 0;
 
@@ -104,9 +125,29 @@ export default function Dashboard() {
       </div>
 
       <div className="panel">
+        <h3>{ym} 캘린더</h3>
+        <div className="calendar">
+          {DOW.map((d) => <div key={d} className="cal-dow">{d}</div>)}
+          {Array.from({ length: calLeadBlanks }).map((_, i) => (
+            <div key={`b${i}`} className="cal-day empty" />
+          ))}
+          {calendarDays.map((c) => (
+            <div key={c.day} className="cal-day">
+              <div className="d">{c.day}</div>
+              {c.sales > 0 && <div className="cal-sales">+{num(c.sales)}</div>}
+              {c.expense > 0 && <div className="cal-expense">-{num(c.expense)}</div>}
+              {(c.sales > 0 || c.expense > 0) && (
+                <div className={`cal-total ${c.total >= 0 ? "pos" : "neg"}`}>{num(c.total)}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="panel">
         <h3>일별 매출</h3>
         <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={daily} margin={{ top: 4, right: 8, left: 8, bottom: 0 }}>
+          <ComposedChart data={daily} margin={{ top: 4, right: 8, left: 8, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
             <XAxis dataKey="day" tickLine={false} axisLine={false} fontSize={11} />
             <YAxis tickFormatter={num} tickLine={false} axisLine={false} fontSize={11} width={72} />
@@ -114,7 +155,8 @@ export default function Dashboard() {
             <Legend />
             <Bar dataKey="카드" stackId="a" fill="#2456d6" radius={[0, 0, 0, 0]} />
             <Bar dataKey="현금" stackId="a" fill="#1a9e6e" radius={[3, 3, 0, 0]} />
-          </BarChart>
+            <Line type="monotone" dataKey="총합" stroke="#f5a524" strokeWidth={2} dot={{ r: 3 }} />
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
 
