@@ -1,111 +1,208 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --ink: #16233a;
+  --ink-soft: #5b6b82;
+  --line: #e2e8f0;
+  --primary: #2456d6;
+  --primary-soft: #eaf0ff;
+  --card-color: #2456d6;   /* 카드 매출 */
+  --cash-color: #1a9e6e;   /* 현금 매출 */
+  --cash-soft: #e6f6ef;
+  --warn: #b45309;
+  --warn-soft: #fef3c7;
+  --danger: #d13438;
+  --radius: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  font-size: 14px;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* ── 레이아웃 ─────────────────────────── */
+.app-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 0 28px;
   display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  align-items: center;
+  gap: 32px;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
+.brand { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+.brand small { color: var(--ink-soft); font-weight: 500; margin-left: 8px; }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+.tabs { display: flex; gap: 4px; height: 100%; }
+.tab {
+  border: none; background: none; cursor: pointer;
+  padding: 0 16px; height: 100%;
+  color: var(--ink-soft); font-weight: 600;
+  border-bottom: 2px solid transparent;
 }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 12px; color: var(--ink-soft); }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
+.page { max-width: 1120px; margin: 0 auto; padding: 28px; }
+.page-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.page-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+.spacer { flex: 1; }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* ── 월 네비게이션 ────────────────────── */
+.month-nav { display: flex; align-items: center; gap: 8px; }
+.month-nav .ym { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 88px; text-align: center; }
+.month-nav button {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--surface); cursor: pointer;
 }
+.month-nav button:hover { background: var(--primary-soft); }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* ── 통계 카드 ────────────────────────── */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 16px 18px;
 }
+.stat-card .label { color: var(--ink-soft); font-size: 12.5px; font-weight: 600; margin-bottom: 6px; }
+.stat-card .value { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.stat-card .sub { color: var(--ink-soft); font-size: 12px; margin-top: 6px; }
+.value.pos { color: var(--cash-color); }
+.value.neg { color: var(--danger); }
+.value.warn { color: var(--warn); }
+
+/* ── 패널 / 테이블 ────────────────────── */
+.panel {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px; margin-bottom: 20px;
+}
+.panel h3 { margin: 0 0 14px; font-size: 15px; }
+
+.table { width: 100%; border-collapse: collapse; }
+.table th {
+  text-align: left; color: var(--ink-soft); font-size: 12px; font-weight: 600;
+  padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+.table td {
+  padding: 10px; border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums; vertical-align: middle;
+}
+.table tr:last-child td { border-bottom: none; }
+.table .r { text-align: right; }
+.table th.r { text-align: right; }
+.muted { color: var(--ink-soft); }
+.empty { text-align: center; color: var(--ink-soft); padding: 36px 0; }
+
+/* ── 배지 ─────────────────────────────── */
+.badge {
+  display: inline-block; padding: 3px 9px; border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+}
+.badge.card { background: var(--primary-soft); color: var(--primary); }
+.badge.cash { background: var(--cash-soft); color: var(--cash-color); }
+.badge.pending { background: var(--warn-soft); color: var(--warn); }
+.badge.done { background: #eef2f7; color: var(--ink-soft); }
+
+/* ── 버튼 / 입력 ──────────────────────── */
+.btn {
+  border: 1px solid var(--line); background: var(--surface);
+  border-radius: 9px; padding: 8px 14px; cursor: pointer; font-weight: 600;
+}
+.btn:hover { background: var(--bg); }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+.btn.primary:hover { background: #1d47b5; }
+.btn.sm { padding: 5px 10px; font-size: 12.5px; border-radius: 7px; }
+.btn.danger { color: var(--danger); }
+
+.input, select.input, textarea.input {
+  width: 100%; border: 1px solid var(--line); border-radius: 9px;
+  padding: 9px 12px; background: var(--surface);
+}
+.input:focus { outline: 2px solid var(--primary-soft); border-color: var(--primary); }
+.input.sm { padding: 5px 8px; width: 120px; font-size: 13px; }
+.input.r { text-align: right; }
+
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+.field .hint { font-size: 12px; color: var(--ink-soft); margin-top: 5px; }
+
+.filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* ── 세그먼트 (카드/현금 선택) ─────────── */
+.seg { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg button {
+  flex: 1; border: none; background: var(--surface); padding: 10px 0;
+  cursor: pointer; font-weight: 700; color: var(--ink-soft);
+}
+.seg button.on.card { background: var(--primary); color: #fff; }
+.seg button.on.cash { background: var(--cash-color); color: #fff; }
+
+/* ── 모달 ─────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(22, 35, 58, 0.45);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+.modal {
+  background: var(--surface); border-radius: 16px; width: 420px; max-width: 92vw;
+  padding: 24px; max-height: 88vh; overflow-y: auto;
+}
+.modal h2 { margin: 0 0 18px; font-size: 17px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+/* ── 비중 바 ──────────────────────────── */
+.ratio-bar { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--line); }
+.ratio-bar .card { background: var(--card-color); }
+.ratio-bar .cash { background: var(--cash-color); }
+.legend { display: flex; gap: 16px; margin-top: 10px; font-size: 12.5px; color: var(--ink-soft); }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+
+/* ── 로그인 ───────────────────────────── */
+.auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.auth-box {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+  width: 380px; padding: 32px;
+}
+.auth-box h1 { font-size: 20px; margin: 0 0 4px; }
+.auth-box p { color: var(--ink-soft); margin: 0 0 22px; }
+.auth-error { color: var(--danger); font-size: 13px; margin-top: 10px; }
+.auth-switch { margin-top: 16px; font-size: 13px; color: var(--ink-soft); text-align: center; }
+.auth-switch button { border: none; background: none; color: var(--primary); font-weight: 700; cursor: pointer; }
+
+/* ── 알약 카테고리 (chips) ────────────── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--line); background: var(--surface);
+  border-radius: 999px; padding: 6px 14px; cursor: pointer;
+  font-weight: 600; font-size: 13px;
+}
+.chip:hover { border-color: var(--primary); }
+.chip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+.chip .x {
+  border: none; background: none; cursor: pointer; padding: 0;
+  color: inherit; opacity: 0.55; font-size: 14px; line-height: 1;
+}
+.chip .x:hover { opacity: 1; }
+.chip-empty { color: var(--ink-soft); font-size: 13px; }
+
+.seg button.on.income { background: var(--cash-color); color: #fff; }
+.seg button.on.expense { background: var(--danger); color: #fff; }
+.badge.income { background: var(--cash-soft); color: var(--cash-color); }
+.badge.expense { background: #fdecec; color: var(--danger); }
+
+.receipt-thumb {
+  width: 44px; height: 44px; object-fit: cover; border-radius: 8px;
+  border: 1px solid var(--line); cursor: pointer; display: block;
+}
+.subhead { font-size: 13px; font-weight: 700; color: var(--ink-soft); margin: 16px 0 8px; }
